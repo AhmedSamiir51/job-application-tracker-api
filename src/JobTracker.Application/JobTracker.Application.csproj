@@ -6,4 +6,7 @@
     <PackageReference Include="FluentValidation.DependencyInjectionExtensions" />
     <PackageReference Include="Microsoft.EntityFrameworkCore" />
   </ItemGroup>
+  <ItemGroup>
+    <InternalsVisibleTo Include="JobTracker.Application.Tests" />
+  </ItemGroup>
 </Project>
