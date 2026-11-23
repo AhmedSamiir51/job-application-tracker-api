@@ -1,0 +1,5 @@
+# Copy to docker-compose.override.yml to enable the Swagger UI in the container.
+services:
+  api:
+    environment:
+      ASPNETCORE_ENVIRONMENT: Development
