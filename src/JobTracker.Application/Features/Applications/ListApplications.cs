@@ -58,8 +58,8 @@ internal sealed class ListApplicationsQueryHandler(IAppDbContext db, ICurrentUse
 
         if (r.Status is { } status) query = query.Where(a => a.Status == status);
         if (r.WorkMode is { } mode) query = query.Where(a => a.WorkMode == mode);
-        if (r.AppliedFrom is { } from) query = query.Where(a => a.AppliedAtUtc >= from);
-        if (r.AppliedTo is { } to) query = query.Where(a => a.AppliedAtUtc <= to);
+        if (r.AppliedFrom is { } from) { var f = AsUtc(from); query = query.Where(a => a.AppliedAtUtc >= f); }
+        if (r.AppliedTo is { } to) { var t = AsUtc(to); query = query.Where(a => a.AppliedAtUtc <= t); }
 
         if (!string.IsNullOrWhiteSpace(r.Company))
         {
@@ -83,6 +83,14 @@ internal sealed class ListApplicationsQueryHandler(IAppDbContext db, ICurrentUse
 
         return new PagedResult<ApplicationSummaryDto>(items.Select(a => a.ToSummary()).ToList(), r.Page, r.PageSize, total);
     }
+
+    // PostgreSQL timestamptz parameters must be UTC; query-string dates arrive as Unspecified or Local.
+    private static DateTime AsUtc(DateTime value) => value.Kind switch
+    {
+        DateTimeKind.Utc => value,
+        DateTimeKind.Local => value.ToUniversalTime(),
+        _ => DateTime.SpecifyKind(value, DateTimeKind.Utc)
+    };
 
     private static IOrderedQueryable<JobApplication> Sort(IQueryable<JobApplication> q, ApplicationSortBy sortBy, bool desc) =>
         (sortBy, desc) switch
