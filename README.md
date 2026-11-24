@@ -10,6 +10,18 @@ A production-style REST API for tracking job applications through the hiring pip
 I built it as a reference for how I structure .NET back ends: Clean Architecture, CQRS with MediatR,
 a domain model that protects its own invariants, consistent error handling, and tests at three levels.
 
+## Live demo
+
+The API is deployed and publicly available:
+
+- **Base URL:** https://job-application-tracker-api-a4804.containers.snapdeploy.app
+- **Swagger UI:** https://job-application-tracker-api-a4804.containers.snapdeploy.app/swagger
+- **Health check:** https://job-application-tracker-api-a4804.containers.snapdeploy.app/health
+
+Register a user in Swagger (POST /api/auth/register), click "Authorize" and paste the
+returned JWT, then try the endpoints against your own data. The free host sleeps after
+a period of inactivity, so the first request may take up to a minute while it wakes up.
+
 ## Highlights
 
 - **Clean Architecture** with strict dependency direction: `Domain <- Application <- Infrastructure / Api`.
@@ -298,3 +310,4 @@ against a real PostgreSQL instance while building this.
 ## License
 
 MIT, see [LICENSE](LICENSE).
+
